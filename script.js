@@ -1,11 +1,12 @@
 // declaring all the variables
 let boxes = document.querySelectorAll(".boxes")
 let start = document.querySelector(".start")
-let resetGame = document.querySelector(".resetgame")
+let resetGame = document.querySelector(".resetGame")
 let playAgain = document.querySelector(".playAgain")
 let messageContainer = document.querySelectorAll(".messagecontainer")
-let winnerMessage = document.querySelector(".winnermessage")
+let winnerMessage = document.querySelector(".winnerMessage")
 let turnO = true;
+let counter = 0;
 
 // ===================== THE 8 WINNING PATTERNS ====================
 
@@ -18,6 +19,7 @@ let winningPattern = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2
 boxes.forEach((box)=> {
     // when clicked the sign would change to X or O for the next turn
     box.addEventListener("click", () => {
+      counter++;
         if (turnO) {
             // turn of player O
             box.innerText = "O";
@@ -32,7 +34,11 @@ boxes.forEach((box)=> {
 
         // now we call the checkWinner function to track the winner
         checkWinner();
-        // upon clicking any of the buttons all the patterns ar checked
+        // upon clicking any of the buttons all the patterns are checked
+
+        if(counter > 0){
+         start.classList.add("unhide");
+        }
     })   
 });
 
@@ -59,9 +65,16 @@ let checkWinner = () => {
     if(pos1 != "" && pos2 != "" && pos3 != ""){
       // this checked that blank boxes are not equal
       if(pos1 === pos2 && pos2 === pos3){
-        console.log(`winner is ${pos1}`)
+        console.log(`winner is ${pos1}`);
 
-        winner(pos1)
+        // prvides argument to the winner function
+        winner(pos1);
+
+        // stops taking input once someone has won
+        boxes.forEach((box)=>{
+          box.disabled = true;
+        })
+        return; 
       }
     }
   }    
@@ -71,10 +84,43 @@ let checkWinner = () => {
 
 let winner = (winnername) => {
   // winnername = pos1
-  winnerMessage.innerText = `Congratulations! The winner is ${winnername}`
-  winnerMessage.classList.remove(".hide")
+  winnerMessage.innerText = `Congratulations! The winner is ${winnername}!`
+  winnerMessage.classList.remove("hide");
+  boxes.disabled = true;
+  playAgain.classList.remove("hide");
 }
 
 // ================= CREATING THE RESET BUTTON ===================
 
+resetGame.addEventListener("click",() =>{
+   boxes.forEach((box) => {
+      box.innerText = "";
+      box.disabled = false;
+  });
+  winnerMessage.classList.add("hide");
+  turnO = true;
+  counter = 0;
+});
+
+
 // ================= CREATING PLAY AGAIN BUTTON ===================
+
+playAgain.addEventListener("click", () => {
+  boxes.forEach((box) => {
+      box.innerText = "";
+      box.disabled = false;
+  });
+  winnerMessage.classList.add("hide");
+  turnO = true;
+  counter = 0;
+  playAgain.classList.add("hide");
+  boxes.disabled = false;
+});
+
+
+// ================== FOR A TIE =======================
+
+if (counter === 9) {
+  winnerMessage.innerText = "It's a tie!";
+  winnerMessage.classList.remove("hide");
+}
