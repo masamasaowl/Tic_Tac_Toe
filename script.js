@@ -70,6 +70,9 @@ let checkWinner = () => {
         // prvides argument to the winner function
         winner(pos1);
 
+        //check for tie
+        checktie(pos1, pos2, pos3)
+
         // stops taking input once someone has won
         boxes.forEach((box)=>{
           box.disabled = true;
@@ -120,7 +123,11 @@ playAgain.addEventListener("click", () => {
 
 // ================== FOR A TIE =======================
 
-if (counter === 9) {
-  winnerMessage.innerText = "It's a tie!";
-  winnerMessage.classList.remove("hide");
+let checktie = (pos1,pos2,pos3) =>{
+  if(pos1 != "" && pos2 != "" && pos3 != ""){
+    if (counter === 9) {
+    winnerMessage.innerText = "It's a tie!";
+    winnerMessage.classList.remove("hide");
+  }
+  }
 }
